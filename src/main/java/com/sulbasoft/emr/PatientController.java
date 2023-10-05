@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/patients")
 public class PatientController {
+   
+    private final PatientEntityRepository repository;
+ 
     @Autowired
-    private final PatientRepository repository = null;
+    public PatientController(PatientEntityRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping
-    Iterable<Patient> all() {
+    Iterable<PatientEntity> all() {
+        System.out.println( repository.findAll());
         return repository.findAll();
     }
 }
