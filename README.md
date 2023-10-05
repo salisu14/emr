@@ -1,5 +1,4 @@
-# emr
-Simple Electronic Medical Record
+# EMR - Electronic Medical Record
 
 ## This is a simple Electronic Medical Record Design for teaching purposes.
 * The project would be developed incrementally adding more features
