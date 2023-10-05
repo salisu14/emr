@@ -4,15 +4,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    @Autowired
-    private final PatientEntityRepository repository = null;
+    private final PatientEntityRepository repository;
+
+    public DataLoader(PatientEntityRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -29,7 +32,7 @@ public class DataLoader implements CommandLineRunner {
             .build();
 
         PatientEntity patient1 = new PatientEntity.Builder()
-            .id(1L)
+            .id(2L)  // Unique id for patient1
             .firstName("Abubakar M.")
             .lastName("Hussaini")
             .birthDate(LocalDate.of(1990, 5, 15))
@@ -37,7 +40,7 @@ public class DataLoader implements CommandLineRunner {
             .build();
 
         PatientEntity patient2 = new PatientEntity.Builder()
-            .id(1L)
+            .id(3L)  // Unique id for patient2
             .firstName("Ibrahim")
             .lastName("Safiyanu")
             .birthDate(LocalDate.of(1995, 7, 25))
@@ -45,7 +48,7 @@ public class DataLoader implements CommandLineRunner {
             .build();
 
         PatientEntity patient3 = new PatientEntity.Builder()
-            .id(1L)
+            .id(4L)  // Unique id for patient3
             .firstName("Jamila Umar")
             .lastName("Bala")
             .birthDate(LocalDate.of(1996, 3, 5))
@@ -53,7 +56,7 @@ public class DataLoader implements CommandLineRunner {
             .build();
 
         PatientEntity patient4 = new PatientEntity.Builder()
-            .id(1L)
+            .id(5L)  // Unique id for patient4
             .firstName("Jamila")
             .lastName("Hassan")
             .birthDate(LocalDate.of(1993, 11, 20))
@@ -66,7 +69,12 @@ public class DataLoader implements CommandLineRunner {
         patients.add(patient3);
         patients.add(patient4);
 
-        repository.saveAll(patients);
+        for (PatientEntity p : patients) {
+            repository.save(p);
+        }
+
+        System.out.println("In Bootstrap");
+        System.out.println("Patient counts: " + repository.count());
     }
     
 }
