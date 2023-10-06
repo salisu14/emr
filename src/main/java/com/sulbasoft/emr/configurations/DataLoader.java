@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 
 import com.sulbasoft.emr.models.Gender;
 import com.sulbasoft.emr.models.PatientEntity;
-import com.sulbasoft.emr.repositories.PatientEntityRepository;
+import com.sulbasoft.emr.services.PatientService;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    private final PatientEntityRepository repository;
+   private final PatientService patientService;
 
-    public DataLoader(PatientEntityRepository repository) {
-        this.repository = repository;
+    public DataLoader(PatientService patientService) {
+        this.patientService = patientService;
     }
 
     @Override
@@ -73,12 +73,10 @@ public class DataLoader implements CommandLineRunner {
         patients.add(patient3);
         patients.add(patient4);
 
-        for (PatientEntity p : patients) {
-            repository.save(p);
-        }
+        patientService.saveAllPatients(patients);
 
         System.out.println("In Bootstrap");
-        System.out.println("Patient counts: " + repository.count());
+        System.out.println("Patient counts: " + patientService.count());
     }
     
 }

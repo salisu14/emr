@@ -1,49 +1,45 @@
 package com.sulbasoft.emr.controllers;
 
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sulbasoft.emr.models.PatientEntity;
-import com.sulbasoft.emr.repositories.PatientEntityRepository;
+import com.sulbasoft.emr.services.PatientService;
 
 @RestController
 @RequestMapping("/api/v1/patients")
 public class PatientController {
    
-    private final PatientEntityRepository repository;
+    private final PatientService service;
  
     @Autowired
-    public PatientController(PatientEntityRepository repository) {
-        this.repository = repository;
+    public PatientController(PatientService service) {
+        this.service = service;
     }
 
     @GetMapping
     Iterable<PatientEntity> all() {
-        System.out.println( repository.findAll());
-        return repository.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/search")
     public List<PatientEntity> search(PatientEntity patientEntity) {
-        if(StringUtils.hasText(patientEntity.getFirstName()) && StringUtils.hasText(patientEntity.getLastName())) {
-            return repository.findByFirstNameContainsOrLastNameContainsAllIgnoreCase(patientEntity.getFirstName(), patientEntity.getLastName());
-        }
+        return service.search(patientEntity);
+    }
 
-        if (StringUtils.hasText(patientEntity.getFirstName())) {
-            return repository.findByFirstNameContainsIgnoreCase(patientEntity.getFirstName());
-        }
+    @GetMapping("/universal-search")
+    public  List<PatientEntity> universalSearch(String firstName, String lastName) {
+        return service.searchPatients(firstName, lastName);
+    }
 
-        if (StringUtils.hasText(patientEntity.getLastName())) {
-            return repository.findByLastNameContainsIgnoreCase(patientEntity.getLastName());
-        }
-
-        return Collections.emptyList();
+    @GetMapping("/fulltext-search")
+    public List<PatientEntity> search(@RequestParam String query) {
+        return service.performFullTextSearch(query);
     }
 }
